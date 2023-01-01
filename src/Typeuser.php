@@ -35,8 +35,3 @@ class Typeuser
     }
 }
 
-// Example usage
-/*$typeUser = new TypeUser();
-$typeId = $typeUser->getTypeId('Particulier'); // Particulier, Professionnel
-echo $typeId; // Outputs the ID of the "Particulier" type*/
-

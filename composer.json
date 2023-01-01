@@ -17,5 +17,5 @@
         "guzzlehttp/guzzle": "^7.5",
         "ext-http": "*"
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }

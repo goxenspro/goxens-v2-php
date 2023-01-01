@@ -15,7 +15,8 @@
     ],
     "require": {
         "guzzlehttp/guzzle": "^7.5",
-        "ext-http": "*"
+        "php": "^7.1",
+        "ext-http": "^2.5"
     },
     "minimum-stability": "stable"
 }

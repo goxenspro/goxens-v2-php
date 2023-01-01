@@ -1,0 +1,20 @@
+{
+    "name": "goxens/goxens-v2-php",
+    "description": "Goxens v2 php SDK",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Goxens\\GoxensV2Php\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Goxens"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.5",
+        "ext-http": "*"
+    }
+}

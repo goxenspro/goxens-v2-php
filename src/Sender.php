@@ -34,7 +34,7 @@ class Sender
             ]);
 
             $responseData = json_decode($response->getBody(), true);
-            if ($responseData['success']) {
+            if ($responseData['status'] === 'Pending') {
                 return "Sender created and awaiting validation.";
             } else {
                 throw new Exception("Sender creation failed: " . $responseData['message']);
@@ -45,6 +45,7 @@ class Sender
             return "An error occurred while creating the sender: " . $e->getMessage();
         }
     }
+
 
     /**
      * @throws Exception
@@ -64,7 +65,7 @@ class Sender
             ]);
 
             $responseData = json_decode($response->getBody(), true);
-            if ($responseData['success']) {
+            if ($responseData['hasDelete'] === true ){
                 return "Sender deleted successfully.";
             } else {
                 throw new Exception("Delete sender failed: " . $responseData['message']);
@@ -90,8 +91,8 @@ class Sender
             ]);
 
             $responseData = json_decode($response->getBody(), true);
-            if ($responseData['success']) {
-                return $responseData['data'];
+            if (isset($responseData['results']) && !empty($responseData['results'])) {
+                return $responseData['results'];
             } else {
                 throw new Exception("Senders not found: " . $responseData['message']);
             }
@@ -102,5 +103,6 @@ class Sender
             return false;
         }
     }
+
 
 }

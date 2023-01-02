@@ -22,10 +22,21 @@ class Sender
     public function createSender($name, $token): string
     {
         try {
+            $headers = [];
+            if (isset($token)) {
+                // Vérifiez si c'est une clé API ou un jeton JWT
+                if (substr($token, 0, 4) === 'GOX-') {
+                    $headers = [
+                        'x-api-key' => $token
+                    ];
+                } else {
+                    $headers = [
+                        'Authorization' => 'Bearer ' . $token
+                    ];
+                }
+            }
             $response = $this->client->request('POST', Endpoints::BASE_URL . '/api/senders', [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token
-                ],
+                'headers' => $headers,
                 'form_params' => [
                     'data' => [
                         'name' => $name
@@ -46,31 +57,39 @@ class Sender
         }
     }
 
-
     /**
      * @throws Exception
      */
     public function deleteSender($id, $token): string
     {
         try {
+            $headers = [];
+            if (isset($token)) {
+                // Vérifiez si c'est une clé API ou un jeton JWT
+                if (substr($token, 0, 4) === 'GOX-') {
+                    $headers = [
+                        'x-api-key' => $token
+                    ];
+                } else {
+                    $headers = [
+                        'Authorization' => 'Bearer ' . $token
+                    ];
+                }
+            }
             $response = $this->client->request('PUT', Endpoints::BASE_URL . '/api/senders/' . $id, [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token
-                ],
+                'headers' => $headers,
                 'form_params' => [
                     'data' => [
                         'hasDelete' => true
                     ]
                 ]
             ]);
-
             $responseData = json_decode($response->getBody(), true);
             if ($responseData['hasDelete'] === true ){
                 return "Sender deleted successfully.";
             } else {
                 throw new Exception("Delete sender failed: " . $responseData['message']);
             }
-
         } catch (GuzzleException $e) {
             // Log the error and return false
             error_log($e->getMessage());
@@ -84,10 +103,22 @@ class Sender
     public function findSenders($token)
     {
         try {
+            $headers = [];
+            if (isset($token)) {
+                // Vérifiez si c'est une clé API ou un jeton JWT
+                if (substr($token, 0, 4) === 'GOX-') {
+                    $headers = [
+                        'x-api-key' => $token
+                    ];
+                } else {
+                    $headers = [
+                        'Authorization' => 'Bearer ' . $token
+                    ];
+                }
+            }
+
             $response = $this->client->request('GET', Endpoints::BASE_URL . '/api/senders', [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token
-                ]
+                'headers' => $headers
             ]);
 
             $responseData = json_decode($response->getBody(), true);
@@ -103,6 +134,7 @@ class Sender
             return false;
         }
     }
+
 
 
 }

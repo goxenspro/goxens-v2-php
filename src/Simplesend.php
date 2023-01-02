@@ -23,11 +23,22 @@ class Simplesend {
     private function createSimpleSend($data, $token)
     {
         try {
+            $headers = [];
+            if (isset($token)) {
+                // Vérifiez si c'est une clé API ou un jeton JWT
+                if (substr($token, 0, 4) === 'GOX-') {
+                    $headers = [
+                        'x-api-key' => $token
+                    ];
+                } else {
+                    $headers = [
+                        'Authorization' => 'Bearer ' . $token
+                    ];
+                }
+            }
+
             $response = $this->client->request('POST', Endpoints::BASE_URL . '/api/simplesends', [
-                'headers' => [
-                    'Authorization' => "Bearer " . $token,
-                    'Content-Type' => 'application/json'
-                ],
+                'headers' => $headers,
                 'json' => $data
             ]);
 
@@ -61,10 +72,21 @@ class Simplesend {
         }
 
         try {
+            $headers = [];
+            if (isset($token)) {
+                // Vérifiez si c'est une clé API ou un jeton JWT
+                if (substr($token, 0, 4) === 'GOX-') {
+                    $headers = [
+                        'x-api-key' => $token
+                    ];
+                } else {
+                    $headers = [
+                        'Authorization' => 'Bearer ' . $token
+                    ];
+                }
+            }
             $response = $this->client->request('PUT', Endpoints::BASE_URL .'/api/simplesends' . $idSimpleSend , [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token
-                ],
+                'headers' => $headers,
                 'form_params' => [
                     "data" => [
                         "produit" => $produitId,

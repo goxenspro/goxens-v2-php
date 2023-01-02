@@ -35,7 +35,7 @@ class Auth {
             ]);
 
             $responseData = json_decode($response->getBody(), true);
-            if ($responseData['success']) {
+            if ($responseData['user']) {
                 return true;
             } else {
                 throw new Exception("Registration failed: " . $responseData['message']);
@@ -61,8 +61,8 @@ class Auth {
             ]);
 
             $responseData = json_decode($response->getBody(), true);
-            if ($responseData['success']) {
-                return $responseData;
+            if ($responseData['user']) {
+                return $responseData['user']['jwt'];
             } else {
                 throw new Exception("Login failed: " . $responseData['message']);
             }
@@ -88,7 +88,7 @@ class Auth {
             ]);
 
             $responseData = json_decode($response->getBody(), true);
-            if ($responseData['success']) {
+            if ($responseData['jwt']) {
                 return $responseData['jwt'];
             } else {
                 throw new Exception("Token generation failed: " . $responseData['message']);

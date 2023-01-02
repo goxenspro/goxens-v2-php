@@ -25,10 +25,21 @@ class Produits {
     public function getProduitId($type, $token)
     {
         try {
+            $headers = [];
+            if (isset($token)) {
+                // Vérifiez si c'est une clé API ou un jeton JWT
+                if (substr($token, 0, 4) === 'GOX-') {
+                    $headers = [
+                        'x-api-key' => $token
+                    ];
+                } else {
+                    $headers = [
+                        'Authorization' => 'Bearer ' . $token
+                    ];
+                }
+            }
             $response = $this->client->request('GET', Endpoints::BASE_URL . '/api/produits', [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token
-                ]
+                'headers' => $headers
             ]);
             $responseData = json_decode($response->getBody(), true);
 

@@ -17,64 +17,6 @@ class Auth {
     }
 
     /**
-     * @throws GuzzleException
-     */
-    public function register($fullname, $email, $type, $password): bool
-    {
-        $typeUser = new Typeuser();
-        $typeId = $typeUser->getTypeId($type);
-
-        try {
-            $response = $this->client->request('POST', Endpoints::BASE_URL . '/api/auth/local/register', [
-                'form_params' => [
-                    'fullname' => $fullname,
-                    'email' => $email,
-                    'type' => $typeId,
-                    'password' => $password,
-                ]
-            ]);
-
-            $responseData = json_decode($response->getBody(), true);
-            if ($responseData['user']) {
-                return true;
-            } else {
-                throw new Exception("Registration failed: " . $responseData['message']);
-            }
-        } catch (Exception $e) {
-            // Log the error and return false
-            error_log($e->getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function login($email, $password)
-    {
-        try {
-            $response = $this->client->request('POST', Endpoints::BASE_URL . '/api/auth/local', [
-                'form_params' => [
-                    'identifier' => $email,
-                    'password' => $password,
-                ]
-            ]);
-
-            $responseData = json_decode($response->getBody(), true);
-            if ($responseData['user']) {
-                return $responseData['user']['jwt'];
-            } else {
-                throw new Exception("Login failed: " . $responseData['message']);
-            }
-
-        } catch (GuzzleException $e) {
-            // Log the error and return false
-            error_log($e->getMessage());
-            return false;
-        }
-    }
-
-    /**
      * @throws Exception
      */
     public function generateToken($email, $password)

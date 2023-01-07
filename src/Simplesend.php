@@ -19,58 +19,9 @@ class Simplesend {
 
     /**
      * @throws Exception
-     */
-    private function createSimpleSend($data, $token)
-    {
-        try {
-            $headers = [];
-            if (isset($token)) {
-                // Vérifiez si c'est une clé API ou un jeton JWT
-                if (substr($token, 0, 4) === 'GOX-') {
-                    $headers = [
-                        'x-api-key' => $token
-                    ];
-                } else {
-                    $headers = [
-                        'Authorization' => 'Bearer ' . $token
-                    ];
-                }
-            }
-
-            $response = $this->client->request('POST', Endpoints::BASE_URL . '/api/simplesends', [
-                'headers' => $headers,
-                'json' => $data
-            ]);
-
-            $responseData = json_decode($response->getBody(), true);
-            if ($responseData['success']) {
-                return $responseData['id'];
-            } else {
-                throw new Exception("SimpleSend creation failed: " . $responseData['message']);
-            }
-        } catch (GuzzleException $e) {
-            error_log($e->getMessage());
-            return false;
-        }
-    }
-
-
-    /**
-     * @throws Exception
      * @throws GuzzleException
      */
     public function sendSimpleSend($data, $token){
-
-        $produit = new Produits();
-        $produitId = $produit->getProduitId('SMS', $token);
-
-        $createSimpleSendData = ['data' => []];
-        $idSimpleSend = $this->createSimpleSend($createSimpleSendData, $token);
-
-        if(!$idSimpleSend){
-            throw new Exception("SimpleSend creation failed");
-        }
-
         try {
             $headers = [];
             if (isset($token)) {
@@ -85,22 +36,29 @@ class Simplesend {
                     ];
                 }
             }
-            $response = $this->client->request('PUT', Endpoints::BASE_URL .'/api/simplesends' . $idSimpleSend , [
+            $response = $this->client->request('POST', Endpoints::BASE_URL .'/api/simplesend/sms', [
                 'headers' => $headers,
                 'form_params' => [
                     "data" => [
-                        "produit" => $produitId,
-                        $data
+                        "produit" => 1,
+                        "sender" => $data['sender'],
+                        "typeContact" => $data['typeContact'],
+                        "listeContacts" => $data['listeContacts'],
+                        "message" => $data['message'],
+                        "hasSchedule" => $data['hasSchedule'],
+                        "programDate" => $data['programDate'],
+                        "programTime" => $data['programTime'],
+                        "typeSmsSend" => $data['typeSmsSend']
                     ]
                 ]
             ]);
 
             $responseData = json_decode($response->getBody(), true);
 
-            if ($responseData['success']) {
+            if ($responseData) {
                 return $responseData['data'];
             } else {
-                throw new Exception("SimpleSend creation failed: " . $responseData['message']);
+                throw new Exception("SimpleSend creation failed: " . $responseData);
             }
 
         } catch (GuzzleException $e) {
